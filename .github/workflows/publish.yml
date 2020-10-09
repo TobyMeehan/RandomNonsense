@@ -1,0 +1,36 @@
+name: Publish
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Publish
+      run: npm run publish
+    - name: FTP Deploy
+      # You may pin to the exact commit or the version.
+      # uses: sebastianpopp/ftp-action@eb75c5cb29d23ee4a729720a27dfb66403cb0f6d
+      uses: sebastianpopp/ftp-action@v2.0.0
+      with:
+        # FTP host
+        host: ${{ secrets.FTP_SERVER }}
+        # FTP user
+        user: ${{ secerts.FTP_USERNAME }}
+        # FTP password
+        password: ${{ secrets.FTP_PASSWORD }}
+        # Force SSL encryption
+        forceSsl: false
+        # Local directory
+        localDir: ./
+        # Remote directory
+        remoteDir: /orn
